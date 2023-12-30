@@ -42,6 +42,7 @@ namespace todo.Controllers
         {
             public string Details { get; set; }
             public int Priority { get; set; }
+            public bool Completed { get; set; }
         }
 
         [HttpPost]
@@ -92,6 +93,33 @@ namespace todo.Controllers
             }
 
             return new JsonResult("Deleted Successfully");
+        }
+
+        [HttpPut]
+        [Route("UpdateTodo")]
+        public JsonResult UpdateTodo(int id, [FromBody] TodoInputModel inputModel)
+        {
+            string query = "update [dbo].[todos] set details = @details, priority = @priority, completed = @completed where id = @id";
+            DataTable table = new DataTable();
+            string sqlDatasource = _configuration.GetConnectionString("todoAppDBCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDatasource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("details", inputModel.Details);
+                    myCommand.Parameters.AddWithValue("priority", inputModel.Priority);
+                    myCommand.Parameters.AddWithValue("completed", inputModel.Completed);
+                    myCommand.Parameters.AddWithValue("@id", id);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult("Updated Successfully");
         }
     }
 }
