@@ -1,18 +1,26 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace todo.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("/")]
     public class TodoAppController : ControllerBase
     {
         private IConfiguration _configuration;
         public TodoAppController(IConfiguration configuration)
         {
             _configuration = configuration;
+        }
+
+        [HttpGet]
+        [Route("GetTest")]
+        public JsonResult GetTest()
+        {
+            return new JsonResult("test");
         }
 
         [HttpGet]
