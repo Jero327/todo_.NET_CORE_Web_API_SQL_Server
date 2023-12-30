@@ -19,7 +19,7 @@ namespace todo.Controllers
         [Route("GetTodos")]
         public JsonResult GetTodos()
         {
-            string query = "select * from [dbo].[todos]";
+            string query = "select * from [dbo].[todos] ORDER BY id DESC";
             DataTable table = new DataTable();
             string sqlDatasource = _configuration.GetConnectionString("todoAppDBCon");
             SqlDataReader myReader;
